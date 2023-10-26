@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Link, Navigate, Outlet } from 'react-router-dom'
 import { stateContext } from '../contexts/ContextProvider'
+import Header from '../views/Header'
 
 function DefaultLayout() {
 
@@ -11,6 +12,8 @@ function DefaultLayout() {
     }
     return (
         <div>
+           <Header />
+
             <Outlet />
         </div>
     )
