@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import {
@@ -13,12 +13,34 @@ import {
     MDBInput,
 } from "mdb-react-ui-kit";
 import { registerSchema } from "../schemas";
+import axiosClient from "../axios-client";
+import { stateContext } from "../contexts/ContextProvider";
 
 
 function Signup() {
 
+    const {setToken,setUser} = useContext(stateContext)
+
     const onSubmit = (values)=>{
         console.log(values)
+
+        const payload = {
+            name:values.name,
+            email:values.email,
+            age:values.age,
+            password:values.password
+        }
+
+        axiosClient.post('/signup',payload).then(({data})=>{
+            setToken(data.token);
+            setUser(data.user)
+        }).catch((err)=>{
+            const response = err.response;
+            if(response && response.status === 422)//validation Error
+            {
+                 console.log(response.data.errors);
+            }
+        })
     }
 
     const {values, errors, touched,isSubmitting,handleBlur,handleSubmit,handleChange} = useFormik({
@@ -31,6 +53,9 @@ function Signup() {
         validationSchema:registerSchema,
         onSubmit,
     })
+
+
+
 
 
 
